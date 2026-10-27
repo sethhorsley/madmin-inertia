@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="<%= I18n.locale %>">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="turbo-visit-control" content="reload">
+    <title><%= content_for?(:title) ? yield(:title) : "Admin" %> - <%= Madmin.site_name %> Admin</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "application" %>
+    <%= javascript_include_tag "madmin", type: "module" %>
+  </head>
+  <body>
+    <%= yield %>
+  </body>
+</html>
