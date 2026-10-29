@@ -1,0 +1,20 @@
+{
+  "name": "madmin-inertia-build",
+  "private": true,
+  "description": "Builds the prebuilt bundle shipped in app/assets/builds. Kept apart from the gem root so linked apps never see this node_modules (two copies of React break hooks).",
+  "scripts": {
+    "build": "pnpm build:js && pnpm build:css",
+    "build:js": "NODE_PATH=$PWD/node_modules esbuild entry.jsx --bundle --minify --format=esm --define:process.env.NODE_ENV=\\\"production\\\" --outfile=../app/assets/builds/madmin_inertia.js",
+    "build:css": "tailwindcss -i input.css -o ../app/assets/builds/madmin_inertia.css --minify"
+  },
+  "dependencies": {
+    "@inertiajs/react": "^3.9.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "esbuild": "^0.28.2",
+    "tailwindcss": "^4.3.3"
+  }
+}

@@ -7,11 +7,14 @@
     <title><%= content_for?(:title) ? yield(:title) : "Admin" %> - <%= Madmin.site_name %> Admin</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <%= stylesheet_link_tag "application" %>
-    <% begin %>
+    <%# An app that ejected views builds its own madmin.js; everyone else gets the gem's prebuilt bundle. %>
+    <% own_bundle = begin; asset_path("madmin.js"); true; rescue StandardError; false; end %>
+    <%= stylesheet_link_tag "madmin_inertia" %>
+    <% if own_bundle %>
+      <%= stylesheet_link_tag "application" %>
       <%= javascript_include_tag "madmin", type: "module" %>
-    <% rescue => error %>
-      <% raise error, "#{error.message}\n\nmadmin_inertia loads app/javascript/madmin.jsx as madmin.js. Run `rails g madmin_inertia:install`, then `pnpm build` (or bin/dev).", error.backtrace %>
+    <% else %>
+      <%= javascript_include_tag "madmin_inertia", type: "module" %>
     <% end %>
   </head>
   <body>
