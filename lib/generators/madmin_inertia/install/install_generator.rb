@@ -4,44 +4,16 @@ module MadminInertia
   module Generators
     # rails g madmin_inertia:install
     #
-    # Sets up the host app for Inertia-rendered Madmin: JS entry, layout, dashboard,
-    # the `admin_user_props` hook, the linked npm package and the Tailwind source path.
-    # Run `rails g madmin:install` first.
+    # Sets up the host app for Inertia-rendered Madmin: the JS entry, the linked npm package
+    # and the Tailwind source path. Run `rails g madmin:install` first; eject pieces with
+    # `rails g madmin_inertia:views`.
     class InstallGenerator < Rails::Generators::Base
       source_root File.expand_path("templates", __dir__)
 
+      # The gem ships the layout, dashboard and views; only this entry lives in the app.
       # @return [void]
-      def add_javascript
+      def add_entry
         copy_file "madmin.jsx", "app/javascript/madmin.jsx"
-        copy_file "layout.jsx", "app/javascript/pages/madmin/layout.jsx"
-        copy_file "dashboard.jsx", "app/javascript/pages/madmin/dashboard.jsx"
-      end
-
-      # @return [void]
-      def add_dashboard
-        copy_file "dashboard_controller.rb", "app/controllers/madmin/dashboard_controller.rb"
-      end
-
-      # Required by the engine; edit it to show your own user and logout path.
-      # @return [void]
-      def add_user_props_hook
-        path = "app/controllers/madmin/application_controller.rb"
-        return say("#{path} not found; run `rails g madmin:install` first.", :red) unless File.exist?(File.join(destination_root, path))
-
-        return if File.read(File.join(destination_root, path)).include?("admin_user_props")
-
-        inject_into_file path, before: /^  end\nend\s*\z/ do
-          <<~RUBY.gsub(/^(?=.)/, "    ")
-
-            private
-
-            # Signed-in user and logout link for the React layout (required by madmin_inertia).
-            # @return [Hash]
-            def admin_user_props
-              {user: {name: "Admin", email: ""}, logout: "/"}
-            end
-          RUBY
-        end
       end
 
       # @return [void]

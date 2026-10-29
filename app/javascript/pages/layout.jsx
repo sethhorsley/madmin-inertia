@@ -13,6 +13,7 @@ export default function Layout({ children }) {
         <li><Link href={admin.dashboard} className={active(admin.dashboard) ? "font-semibold" : ""}>Dashboard</Link></li>
         {admin.navigation.map((item) => <li key={item.url}><Link href={item.url} className={active(item.url) ? "font-semibold underline" : ""}>{item.label}</Link></li>)}
       </ul>
+      {admin.user && <p className="mt-6 text-xs text-neutral-500">{admin.user.name}{admin.logout && <> · <a href={admin.logout}>Sign out</a></>}</p>}
     </nav>
     <main className="flex-1 space-y-6 p-4 sm:p-6 lg:p-8">
       {Object.entries(flash || {}).map(([kind, message]) => <p key={kind} role={kind === "alert" ? "alert" : "status"} className="rounded-lg border border-neutral-300 p-3">{message}</p>)}

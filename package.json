@@ -2,7 +2,7 @@
   "name": "madmin-inertia",
   "version": "0.1.0",
   "private": true,
-  "main": "index.js",
+  "main": "index.jsx",
   "peerDependencies": {
     "@inertiajs/react": "*",
     "react": "*"
