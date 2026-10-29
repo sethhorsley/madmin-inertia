@@ -8,7 +8,11 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag "application" %>
-    <%= javascript_include_tag "madmin", type: "module" %>
+    <% begin %>
+      <%= javascript_include_tag "madmin", type: "module" %>
+    <% rescue => error %>
+      <% raise error, "#{error.message}\n\nmadmin_inertia loads app/javascript/madmin.jsx as madmin.js. Run `rails g madmin_inertia:install`, then `pnpm build` (or bin/dev).", error.backtrace %>
+    <% end %>
   </head>
   <body>
     <%= yield %>
