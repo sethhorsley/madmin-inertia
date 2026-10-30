@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import { Link, usePage } from "@inertiajs/react"
+import { isActive } from "../lib/navigation"
 import { inputClass } from "../lib/ui"
 
 const itemClass = (active) => `block rounded-md px-2 py-1.5 hover:bg-neutral-100 dark:hover:bg-neutral-800 ${active ? "bg-neutral-100 font-semibold dark:bg-neutral-800" : ""}`
@@ -26,10 +27,10 @@ function Group({ label, expanded, forceOpen, className = "", children }) {
   </details>
 }
 
-export default function AdminSidebar({ admin }) {
+export default function AdminSidebar({ admin, open }) {
   const path = usePage().url.split("?")[0]
   const [search, setSearch] = useState("")
-  const active = (item) => item.url && item.url !== admin.dashboard && (path === item.url || path.startsWith(`${item.url}/`))
+  const active = (item) => isActive(item, path, admin.dashboard)
   const matches = (item) => item.label.toLowerCase().includes(search.toLowerCase())
   // Links inside the admin navigate with Inertia; anything else is a plain anchor.
   const leaf = (item) => <li key={item.url || item.label}>{item.url?.startsWith(admin.dashboard)
@@ -38,7 +39,7 @@ export default function AdminSidebar({ admin }) {
 
   const navigation = admin.navigation.filter((item) => matches(item) || item.children.some(matches))
 
-  return <nav className="flex flex-col gap-3 border-b border-neutral-200 dark:border-neutral-800 p-4 text-sm md:sticky md:top-0 md:h-screen md:w-64 md:shrink-0 md:overflow-y-auto md:border-b-0 md:border-r">
+  return <nav className={`${open ? "flex" : "hidden"} flex-col gap-3 border-b border-neutral-200 dark:border-neutral-800 p-4 text-sm md:sticky md:top-0 md:h-screen md:w-64 md:shrink-0 md:overflow-y-auto md:border-b-0 md:border-r`}>
     <Link href={admin.dashboard} className="block px-2 text-lg font-semibold">{admin.name} Admin</Link>
     <input type="search" aria-label="Find a resource" placeholder="Find a resource…" value={search} onChange={(event) => setSearch(event.target.value)} className={inputClass} />
     <ul className="flex-1 space-y-0.5">
