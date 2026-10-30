@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client"
 import { createInertiaApp } from "@inertiajs/react"
 import DefaultDashboard from "./app/javascript/pages/dashboard/index"
 import DefaultLayout from "./app/javascript/layouts/admin-layout"
+import Settings from "./app/javascript/pages/settings/show"
 import Resource from "./app/javascript/components/resource-page"
 import { registry } from "./app/javascript/lib/registry"
 import "./app/javascript/lib/theme"
@@ -21,7 +22,7 @@ export * from "./app/javascript/components/ui/sidebar"
 export function start({ layout, dashboard, views = {} } = {}) {
   Object.assign(registry, { layout, dashboard, views })
   const Layout = layout || DefaultLayout
-  const pages = { "Madmin/Resource": Resource, "Madmin/Dashboard": dashboard || DefaultDashboard }
+  const pages = { "Madmin/Resource": Resource, "Madmin/Dashboard": dashboard || DefaultDashboard, "Madmin/Settings": Settings }
 
   createInertiaApp({
     resolve: (name) => {

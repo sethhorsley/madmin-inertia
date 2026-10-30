@@ -9,7 +9,7 @@ module Madmin::InertiaProps
       navigation << {label: item.label, url: item.url, children: item.items.map { |child| {label: child.label, url: child.url} }}
     end
     {
-      admin: {name: Madmin.site_name, dashboard: main_app.madmin_root_path, navigation: navigation}.merge(admin_user_props),
+      admin: {name: Madmin.site_name, dashboard: main_app.madmin_root_path, settings: main_app.madmin_settings_path, navigation: navigation}.merge(admin_user_props),
       flash: flash.to_hash.slice("notice", "alert"),
       uploads: uploads_props
     }

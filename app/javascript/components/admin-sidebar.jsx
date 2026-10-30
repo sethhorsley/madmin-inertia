@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { Link } from "@inertiajs/react"
-import { ChevronRight, ChevronsUpDown, Folder, LayoutDashboard, LogOut, ShieldCheck } from "lucide-react"
+import { ChevronRight, ChevronsUpDown, Folder, LayoutDashboard, LogOut, Settings, ShieldCheck, User } from "lucide-react"
 import { isActive } from "../lib/navigation"
 import { Avatar, AvatarFallback } from "./ui/avatar"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./ui/collapsible"
@@ -77,22 +77,26 @@ function Section({ admin, item, active, forceOpen }) {
   </Collapsible>
 }
 
+// Profile menu in the footer. Signed out (no `admin.user`) it is just "Profile"; Settings is always there.
 // Sign out is a real DELETE form post, so it works with Devise-style routes.
-function NavUser({ user, logout }) {
+function NavUser({ admin }) {
   const { isMobile } = useSidebar()
+  const { user, logout } = admin
   const token = document.querySelector('meta[name="csrf-token"]')?.content
+  const name = user?.name || "Profile"
   return <SidebarMenu><SidebarMenuItem>
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <SidebarMenuButton size="lg" className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
-          <Avatar className="h-8 w-8 rounded-lg"><AvatarFallback className="rounded-lg">{user.name.slice(0, 2).toUpperCase()}</AvatarFallback></Avatar>
-          <div className="grid flex-1 text-left text-sm leading-tight"><span className="truncate font-medium">{user.name}</span><span className="truncate text-xs">{user.email}</span></div>
+          <Avatar className="h-8 w-8 rounded-lg"><AvatarFallback className="rounded-lg">{user ? name.slice(0, 2).toUpperCase() : <User className="size-4" />}</AvatarFallback></Avatar>
+          <div className="grid flex-1 text-left text-sm leading-tight"><span className="truncate font-medium">{name}</span>{user?.email && <span className="truncate text-xs">{user.email}</span>}</div>
           <ChevronsUpDown className="ml-auto size-4" />
         </SidebarMenuButton>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg" side={isMobile ? "bottom" : "right"} align="end" sideOffset={4}>
-        <DropdownMenuLabel className="font-normal"><div className="grid text-sm leading-tight"><span className="truncate font-medium">{user.name}</span><span className="truncate text-xs text-muted-foreground">{user.email}</span></div></DropdownMenuLabel>
-        {logout && <>
+        {user && <><DropdownMenuLabel className="font-normal"><div className="grid text-sm leading-tight"><span className="truncate font-medium">{user.name}</span><span className="truncate text-xs text-muted-foreground">{user.email}</span></div></DropdownMenuLabel><DropdownMenuSeparator /></>}
+        <DropdownMenuItem asChild><Link href={admin.settings}><Settings />Settings</Link></DropdownMenuItem>
+        {user && logout && <>
           <DropdownMenuSeparator />
           <form method="post" action={logout}>
             <input type="hidden" name="_method" value="delete" />
@@ -134,7 +138,7 @@ export default function AdminSidebar({ admin, path }) {
         </SidebarMenu>
       </SidebarGroup>
     </SidebarContent>
-    {admin.user && <SidebarFooter><NavUser user={admin.user} logout={admin.logout} /></SidebarFooter>}
+    <SidebarFooter><NavUser admin={admin} /></SidebarFooter>
     <SidebarRail />
   </Sidebar>
 }

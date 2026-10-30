@@ -6,7 +6,7 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbP
 // Admin name > section > page, like the sidebar's grouping. "Account / Notifier" reads "Account - Notifier".
 export default function Breadcrumbs({ admin, path }) {
   const [section, page] = trail(admin.navigation, path, admin.dashboard)
-  const current = (page || section)?.label.replaceAll(" / ", " - ") || "Dashboard"
+  const current = (page || section)?.label.replaceAll(" / ", " - ") || (path === admin.settings ? "Settings" : "Dashboard")
 
   return <Breadcrumb>
     <BreadcrumbList>
