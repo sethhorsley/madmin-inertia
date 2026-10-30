@@ -111,7 +111,7 @@ export default function AdminSidebar({ admin, path }) {
   const matches = (item) => item.label.toLowerCase().includes(search.toLowerCase())
   const navigation = admin.navigation.filter((item) => matches(item) || item.children.some(matches))
 
-  return <Sidebar collapsible="icon">
+  return <Sidebar variant="inset" collapsible="icon">
     <SidebarHeader>
       <SidebarMenu><SidebarMenuItem>
         <SidebarMenuButton size="lg" asChild>
