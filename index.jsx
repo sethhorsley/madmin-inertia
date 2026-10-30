@@ -10,6 +10,11 @@ import "./app/javascript/lib/theme"
 export { default as Field, Value } from "./app/javascript/components/field"
 export { default as Filters, indexUrl } from "./app/javascript/components/filters"
 export { buttonClass, inputClass } from "./app/javascript/lib/ui"
+export { default as AdminSidebar } from "./app/javascript/components/admin-sidebar"
+export { default as Breadcrumbs } from "./app/javascript/components/breadcrumbs"
+export { default as ThemeToggle } from "./app/javascript/components/theme-toggle"
+export * from "./app/javascript/components/ui/separator"
+export * from "./app/javascript/components/ui/sidebar"
 
 // Boots the admin. Pass components ejected with `rails g madmin_inertia:views`:
 // start({ layout, dashboard, views: { index, "post/show": PostShow } })

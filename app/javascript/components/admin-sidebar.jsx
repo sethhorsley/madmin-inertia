@@ -1,9 +1,15 @@
 import React, { useState } from "react"
-import { Link, usePage } from "@inertiajs/react"
+import { Link } from "@inertiajs/react"
+import { ChevronRight, ChevronsUpDown, Folder, LayoutDashboard, LogOut, ShieldCheck } from "lucide-react"
 import { isActive } from "../lib/navigation"
-import { inputClass } from "../lib/ui"
-
-const itemClass = (active) => `block rounded-md px-2 py-1.5 hover:bg-neutral-100 dark:hover:bg-neutral-800 ${active ? "bg-neutral-100 font-semibold dark:bg-neutral-800" : ""}`
+import { Avatar, AvatarFallback } from "./ui/avatar"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./ui/collapsible"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu"
+import { Input } from "./ui/input"
+import {
+  Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton,
+  SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarRail, useSidebar,
+} from "./ui/sidebar"
 
 // "Account / Notifier / Alerts" => group "Account", sublink "Notifier - Alerts"; labels without " / " stay flat.
 function namespaced(children) {
@@ -18,59 +24,117 @@ function namespaced(children) {
   return entries
 }
 
-// A <details> that opens itself when it holds the current page (or a search match) but stays user-toggleable.
-function Group({ label, expanded, forceOpen, className = "", children }) {
-  const [open, setOpen] = useState(expanded)
-  return <details open={open || forceOpen} onToggle={(event) => setOpen(event.currentTarget.open)} className={className}>
-    <summary className="cursor-pointer rounded-md px-2 py-1.5 font-medium hover:bg-neutral-100 dark:hover:bg-neutral-800">{label}</summary>
-    <ul className="ml-3 space-y-0.5 border-l border-neutral-200 dark:border-neutral-800 pl-2">{children}</ul>
-  </details>
+// Links inside the admin navigate with Inertia; anything else is a plain anchor.
+function NavLink({ admin, item, children, ...props }) {
+  return item.url?.startsWith(admin.dashboard)
+    ? <Link href={item.url} {...props}>{children}</Link>
+    : <a href={item.url || "#"} {...props}>{children}</a>
 }
 
-export default function AdminSidebar({ admin, open }) {
-  const path = usePage().url.split("?")[0]
-  const [search, setSearch] = useState("")
-  const active = (item) => isActive(item, path, admin.dashboard)
-  const matches = (item) => item.label.toLowerCase().includes(search.toLowerCase())
-  // Links inside the admin navigate with Inertia; anything else is a plain anchor.
-  const leaf = (item) => <li key={item.url || item.label}>{item.url?.startsWith(admin.dashboard)
-    ? <Link href={item.url} className={itemClass(active(item))}>{item.label}</Link>
-    : <a href={item.url || "#"} className={itemClass(false)}>{item.label}</a>}</li>
+function Leaf({ admin, item, active }) {
+  return <SidebarMenuSubItem>
+    <SidebarMenuSubButton asChild isActive={active}><NavLink admin={admin} item={item}><span>{item.label}</span></NavLink></SidebarMenuSubButton>
+  </SidebarMenuSubItem>
+}
 
-  const navigation = admin.navigation.filter((item) => matches(item) || item.children.some(matches))
+function Namespace({ admin, entry, active, forceOpen }) {
+  return <Collapsible defaultOpen={entry.children.some(active)} open={forceOpen || undefined} asChild className="group/namespace">
+    <SidebarMenuSubItem>
+      <CollapsibleTrigger asChild>
+        <SidebarMenuSubButton className="w-full cursor-pointer">
+          <span>{entry.label}</span>
+          <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/namespace:rotate-90" />
+        </SidebarMenuSubButton>
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <SidebarMenuSub>{entry.children.map((child) => <Leaf key={child.url} admin={admin} item={child} active={active(child)} />)}</SidebarMenuSub>
+      </CollapsibleContent>
+    </SidebarMenuSubItem>
+  </Collapsible>
+}
 
-  // The wrapper animates (rows on mobile, width from md up); the nav keeps its full width so it slides rather than reflows.
-  return <aside inert={!open} className={`grid overflow-hidden transition-all duration-200 ease-linear md:sticky md:top-0 md:block md:h-screen md:shrink-0 ${open ? "grid-rows-[1fr] md:w-64" : "grid-rows-[0fr] md:w-0"}`}>
-  <nav className="flex min-h-0 flex-col gap-3 overflow-y-auto border-b border-neutral-200 p-4 text-sm md:h-full md:w-64 md:border-b-0 md:border-r dark:border-neutral-800">
-    <Link href={admin.dashboard} className="block px-2 text-lg font-semibold">{admin.name} Admin</Link>
-    <input type="search" aria-label="Find a resource" placeholder="Find a resource…" value={search} onChange={(event) => setSearch(event.target.value)} className={inputClass} />
-    <ul className="flex-1 space-y-0.5">
-      <li><Link href={admin.dashboard} className={itemClass(path === admin.dashboard)}>Dashboard</Link></li>
-      {navigation.map((item) => {
-        if (item.url) return leaf(item)
-        const children = item.children.filter((child) => matches(item) || matches(child))
-        return <li key={item.label}><Group label={item.label} expanded={children.some(active)} forceOpen={search !== ""}>
-          {namespaced(children).map((entry) => entry.children
-            ? <li key={entry.label}><Group label={entry.label} expanded={entry.children.some(active)} forceOpen={search !== ""}>{entry.children.map(leaf)}</Group></li>
-            : leaf(entry))}
-        </Group></li>
-      })}
-    </ul>
-    {admin.user && <User user={admin.user} logout={admin.logout} />}
-  </nav>
-  </aside>
+// A collapsible section; opens itself when it holds the current page, and expands the sidebar if it was an icon rail.
+function Section({ admin, item, active, forceOpen }) {
+  const { open, setOpen } = useSidebar()
+  const [expanded, setExpanded] = useState(item.children.some(active))
+  return <Collapsible asChild open={expanded || forceOpen} onOpenChange={(value) => { if (!open) setOpen(true); setExpanded(value) }} className="group/collapsible">
+    <SidebarMenuItem>
+      <CollapsibleTrigger asChild>
+        <SidebarMenuButton tooltip={item.label}>
+          <Folder />
+          <span>{item.label}</span>
+          <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+        </SidebarMenuButton>
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <SidebarMenuSub>
+          {namespaced(item.children).map((entry) => entry.children
+            ? <Namespace key={entry.label} admin={admin} entry={entry} active={active} forceOpen={forceOpen} />
+            : <Leaf key={entry.url} admin={admin} item={entry} active={active(entry)} />)}
+        </SidebarMenuSub>
+      </CollapsibleContent>
+    </SidebarMenuItem>
+  </Collapsible>
 }
 
 // Sign out is a real DELETE form post, so it works with Devise-style routes.
-function User({ user, logout }) {
+function NavUser({ user, logout }) {
+  const { isMobile } = useSidebar()
   const token = document.querySelector('meta[name="csrf-token"]')?.content
-  return <div className="border-t border-neutral-200 dark:border-neutral-800 px-2 pt-3">
-    <p className="truncate font-medium">{user.name}</p>
-    {user.email && <p className="truncate text-xs text-neutral-500">{user.email}</p>}
-    {logout && <form method="post" action={logout} className="mt-2">
-      <input type="hidden" name="_method" value="delete" />
-      <input type="hidden" name="authenticity_token" value={token} />
-      <button type="submit" className="text-xs underline">Sign out</button>
-    </form>}
-  </div>
+  return <SidebarMenu><SidebarMenuItem>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <SidebarMenuButton size="lg" className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
+          <Avatar className="h-8 w-8 rounded-lg"><AvatarFallback className="rounded-lg">{user.name.slice(0, 2).toUpperCase()}</AvatarFallback></Avatar>
+          <div className="grid flex-1 text-left text-sm leading-tight"><span className="truncate font-medium">{user.name}</span><span className="truncate text-xs">{user.email}</span></div>
+          <ChevronsUpDown className="ml-auto size-4" />
+        </SidebarMenuButton>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg" side={isMobile ? "bottom" : "right"} align="end" sideOffset={4}>
+        <DropdownMenuLabel className="font-normal"><div className="grid text-sm leading-tight"><span className="truncate font-medium">{user.name}</span><span className="truncate text-xs text-muted-foreground">{user.email}</span></div></DropdownMenuLabel>
+        {logout && <>
+          <DropdownMenuSeparator />
+          <form method="post" action={logout}>
+            <input type="hidden" name="_method" value="delete" />
+            <input type="hidden" name="authenticity_token" value={token} />
+            <DropdownMenuItem asChild><button type="submit" className="w-full cursor-pointer"><LogOut />Log out</button></DropdownMenuItem>
+          </form>
+        </>}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  </SidebarMenuItem></SidebarMenu>
+}
+
+export default function AdminSidebar({ admin, path }) {
+  const [search, setSearch] = useState("")
+  const active = (item) => isActive(item, path, admin.dashboard)
+  const matches = (item) => item.label.toLowerCase().includes(search.toLowerCase())
+  const navigation = admin.navigation.filter((item) => matches(item) || item.children.some(matches))
+
+  return <Sidebar collapsible="icon">
+    <SidebarHeader>
+      <SidebarMenu><SidebarMenuItem>
+        <SidebarMenuButton size="lg" asChild>
+          <Link href={admin.dashboard}>
+            <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground"><ShieldCheck className="size-4" /></div>
+            <div className="grid flex-1 text-left text-sm leading-tight"><span className="truncate font-medium">{admin.name}</span><span className="truncate text-xs">Admin</span></div>
+          </Link>
+        </SidebarMenuButton>
+      </SidebarMenuItem></SidebarMenu>
+      <Input type="search" aria-label="Find a resource" placeholder="Find a resource…" value={search} onChange={(event) => setSearch(event.target.value)} className="group-data-[collapsible=icon]:hidden" />
+    </SidebarHeader>
+    <SidebarContent>
+      <SidebarGroup>
+        <SidebarGroupLabel>Platform</SidebarGroupLabel>
+        <SidebarMenu>
+          <SidebarMenuItem><SidebarMenuButton asChild tooltip="Dashboard" isActive={path === admin.dashboard}><Link href={admin.dashboard}><LayoutDashboard /><span>Dashboard</span></Link></SidebarMenuButton></SidebarMenuItem>
+          {navigation.map((item) => item.url
+            ? <SidebarMenuItem key={item.label}><SidebarMenuButton asChild tooltip={item.label} isActive={active(item)}><NavLink admin={admin} item={item}><Folder /><span>{item.label}</span></NavLink></SidebarMenuButton></SidebarMenuItem>
+            : <Section key={item.label} admin={admin} item={{ ...item, children: item.children.filter((child) => matches(item) || matches(child)) }} active={active} forceOpen={search !== ""} />)}
+        </SidebarMenu>
+      </SidebarGroup>
+    </SidebarContent>
+    {admin.user && <SidebarFooter><NavUser user={admin.user} logout={admin.logout} /></SidebarFooter>}
+    <SidebarRail />
+  </Sidebar>
 }

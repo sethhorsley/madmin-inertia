@@ -1,14 +1,21 @@
 import React, { useState } from "react"
+import { Monitor, Moon, Sun } from "lucide-react"
 import { getTheme, setTheme } from "../lib/theme"
+import { Button } from "./ui/button"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "./ui/dropdown-menu"
 
-const THEMES = ["light", "dark", "system"]
+const THEMES = { light: Sun, dark: Moon, system: Monitor }
 
 export default function ThemeToggle() {
   const [theme, setCurrent] = useState(getTheme)
-  const choose = (value) => { setTheme(value); setCurrent(value) }
+  const Icon = THEMES[theme]
 
-  return <div role="group" aria-label="Theme" className="inline-flex overflow-hidden rounded-lg border border-neutral-300 text-sm dark:border-neutral-700">
-    {THEMES.map((value) => <button key={value} type="button" aria-pressed={theme === value} onClick={() => choose(value)}
-      className={`px-3 py-1.5 capitalize hover:bg-neutral-100 dark:hover:bg-neutral-800 ${theme === value ? "bg-neutral-100 font-semibold dark:bg-neutral-800" : ""}`}>{value}</button>)}
-  </div>
+  return <DropdownMenu>
+    <DropdownMenuTrigger asChild><Button variant="outline" size="icon" aria-label="Theme"><Icon /></Button></DropdownMenuTrigger>
+    <DropdownMenuContent align="end">
+      <DropdownMenuRadioGroup value={theme} onValueChange={(value) => { setTheme(value); setCurrent(value) }}>
+        {Object.entries(THEMES).map(([value, ItemIcon]) => <DropdownMenuRadioItem key={value} value={value} className="capitalize"><ItemIcon className="size-4" />{value}</DropdownMenuRadioItem>)}
+      </DropdownMenuRadioGroup>
+    </DropdownMenuContent>
+  </DropdownMenu>
 }

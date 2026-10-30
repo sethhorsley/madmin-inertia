@@ -74,4 +74,6 @@ The prebuilt bundle in `app/assets/builds` comes from `build/`. After changing a
 cd build && pnpm install && pnpm build
 ```
 
+The UI is [shadcn/ui](https://ui.shadcn.com) (`build/components.json`, JSX, in `app/javascript/components/ui`). Add components from `build/` with `pnpm dlx shadcn@latest add <name>`, then change the generated `@/` and `cn` imports to relative paths: apps that eject views bundle this source themselves and have no `@` alias.
+
 Commit the rebuilt `madmin_inertia.js` and `madmin_inertia.css`. `build/` has its own `node_modules` on purpose: apps link the gem root, and a second copy of React there would break hooks.

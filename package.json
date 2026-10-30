@@ -5,6 +5,11 @@
   "main": "index.jsx",
   "peerDependencies": {
     "@inertiajs/react": "*",
-    "react": "*"
+    "class-variance-authority": "*",
+    "clsx": "*",
+    "lucide-react": "*",
+    "radix-ui": "*",
+    "react": "*",
+    "tailwind-merge": "*"
   }
 }

@@ -8,7 +8,7 @@ module MadminInertia
     # registered with `start()` in app/javascript/madmin.jsx. Importmap apps have no compiler for JSX.
     module Ejectable
       # Relative imports of the gem's shared pieces, which ejected files take from the package instead.
-      GEM_IMPORT = %r{(?:\.\./)+(?:components/(?:field|filters)|lib/ui)}.source
+      GEM_IMPORT = %r{(?:\.\./)+(?:components/[\w/-]+|lib/ui)}.source
       ENTRY = "app/javascript/madmin.jsx"
       SOURCE = File.expand_path("../../../app/javascript", __dir__)
 
