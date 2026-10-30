@@ -39,7 +39,9 @@ export default function AdminSidebar({ admin, open }) {
 
   const navigation = admin.navigation.filter((item) => matches(item) || item.children.some(matches))
 
-  return <nav className={`${open ? "flex" : "hidden"} flex-col gap-3 border-b border-neutral-200 dark:border-neutral-800 p-4 text-sm md:sticky md:top-0 md:h-screen md:w-64 md:shrink-0 md:overflow-y-auto md:border-b-0 md:border-r`}>
+  // The wrapper animates (rows on mobile, width from md up); the nav keeps its full width so it slides rather than reflows.
+  return <aside inert={!open} className={`grid overflow-hidden transition-all duration-200 ease-linear md:sticky md:top-0 md:block md:h-screen md:shrink-0 ${open ? "grid-rows-[1fr] md:w-64" : "grid-rows-[0fr] md:w-0"}`}>
+  <nav className="flex min-h-0 flex-col gap-3 overflow-y-auto border-b border-neutral-200 p-4 text-sm md:h-full md:w-64 md:border-b-0 md:border-r dark:border-neutral-800">
     <Link href={admin.dashboard} className="block px-2 text-lg font-semibold">{admin.name} Admin</Link>
     <input type="search" aria-label="Find a resource" placeholder="Find a resource…" value={search} onChange={(event) => setSearch(event.target.value)} className={inputClass} />
     <ul className="flex-1 space-y-0.5">
@@ -56,6 +58,7 @@ export default function AdminSidebar({ admin, open }) {
     </ul>
     {admin.user && <User user={admin.user} logout={admin.logout} />}
   </nav>
+  </aside>
 }
 
 // Sign out is a real DELETE form post, so it works with Devise-style routes.
