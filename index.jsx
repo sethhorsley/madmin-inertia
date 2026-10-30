@@ -5,6 +5,7 @@ import DefaultDashboard from "./app/javascript/pages/dashboard/index"
 import DefaultLayout from "./app/javascript/layouts/admin-layout"
 import Resource from "./app/javascript/components/resource-page"
 import { registry } from "./app/javascript/lib/registry"
+import "./app/javascript/lib/theme"
 
 export { default as Field, Value } from "./app/javascript/components/field"
 export { default as Filters, indexUrl } from "./app/javascript/components/filters"

@@ -7,6 +7,10 @@
     <title><%= content_for?(:title) ? yield(:title) : "Admin" %> - <%= Madmin.site_name %> Admin</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <%# Set the theme before first paint so a saved dark choice does not flash light. %>
+    <%= javascript_tag nonce: true do %>
+      try { var t = localStorage.getItem("madmin-theme"); if (t === "dark" || (t !== "light" && matchMedia("(prefers-color-scheme: dark)").matches)) document.documentElement.classList.add("dark") } catch (e) {}
+    <% end %>
     <%# An app that ejected views builds its own madmin.js; everyone else gets the gem's prebuilt bundle. %>
     <% own_bundle = begin; asset_path("madmin.js"); true; rescue StandardError; false; end %>
     <%= stylesheet_link_tag "madmin_inertia" %>

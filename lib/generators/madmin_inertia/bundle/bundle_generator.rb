@@ -49,6 +49,8 @@ module MadminInertia
 
         relative = Pathname.new(gem_root).relative_path_from(Pathname.new(File.join(destination_root, File.dirname(css))))
         append_to_file css, %(\n@source "#{relative}/app/javascript";\n@source "../../javascript";\n)
+        # The admin's theme toggle sets a `dark` class; Tailwind's default dark variant ignores it.
+        append_to_file css, %(@custom-variant dark (&:where(.dark, .dark *));\n) unless File.read(File.join(destination_root, css)).include?("@custom-variant dark")
       end
 
       # @return [void]
