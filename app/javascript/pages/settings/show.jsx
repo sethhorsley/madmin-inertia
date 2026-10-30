@@ -2,12 +2,14 @@ import React, { useState } from "react"
 import { Head } from "@inertiajs/react"
 import { Monitor, Moon, Sun } from "lucide-react"
 import { Button } from "../../components/ui/button"
+import { useSidebarVariant, setSidebarVariant } from "../../lib/sidebar-variant"
 import { getTheme, setTheme } from "../../lib/theme"
 
 const THEMES = { light: Sun, dark: Moon, system: Monitor }
 
 export default function Settings({ admin }) {
   const [theme, setCurrent] = useState(getTheme)
+  const variant = useSidebarVariant()
 
   return <>
     <Head title={`Settings - ${admin.name} Admin`} />
@@ -17,6 +19,13 @@ export default function Settings({ admin }) {
       <p className="text-sm text-muted-foreground">Saved in this browser.</p>
       <div role="group" aria-label="Theme" className="flex flex-wrap gap-2">
         {Object.entries(THEMES).map(([value, Icon]) => <Button key={value} type="button" variant={theme === value ? "default" : "outline"} aria-pressed={theme === value} className="capitalize" onClick={() => { setTheme(value); setCurrent(value) }}><Icon />{value}</Button>)}
+      </div>
+    </section>
+    <section className="space-y-3">
+      <h2 className="text-lg font-medium">Sidebar</h2>
+      <p className="text-sm text-muted-foreground">Inset floats the page as a rounded panel beside the sidebar. Saved in this browser.</p>
+      <div role="group" aria-label="Sidebar style" className="flex flex-wrap gap-2">
+        {[["inset", "Inset"], ["sidebar", "Standard"]].map(([value, label]) => <Button key={value} type="button" variant={variant === value ? "default" : "outline"} aria-pressed={variant === value} onClick={() => setSidebarVariant(value)}>{label}</Button>)}
       </div>
     </section>
     {admin.user && <section className="space-y-3">

@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { Link } from "@inertiajs/react"
 import { ChevronRight, ChevronsUpDown, Folder, LayoutDashboard, LogOut, Settings, ShieldCheck, User } from "lucide-react"
 import { isActive } from "../lib/navigation"
+import { useSidebarVariant } from "../lib/sidebar-variant"
 import { Avatar, AvatarFallback } from "./ui/avatar"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./ui/collapsible"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu"
@@ -111,11 +112,12 @@ function NavUser({ admin }) {
 
 export default function AdminSidebar({ admin, path }) {
   const [search, setSearch] = useState("")
+  const variant = useSidebarVariant()
   const active = (item) => isActive(item, path, admin.dashboard)
   const matches = (item) => item.label.toLowerCase().includes(search.toLowerCase())
   const navigation = admin.navigation.filter((item) => matches(item) || item.children.some(matches))
 
-  return <Sidebar variant="inset" collapsible="icon">
+  return <Sidebar variant={variant} collapsible="icon">
     <SidebarHeader>
       <SidebarMenu><SidebarMenuItem>
         <SidebarMenuButton size="lg" asChild>
