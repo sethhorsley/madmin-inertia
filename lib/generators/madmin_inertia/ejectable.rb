@@ -7,17 +7,19 @@ module MadminInertia
     # Needs a package.json (jsbundling-rails with esbuild): the JSX source is copied into the app and
     # registered with `start()` in app/javascript/madmin.jsx. Importmap apps have no compiler for JSX.
     module Ejectable
+      # Relative imports of the gem's shared pieces, which ejected files take from the package instead.
+      GEM_IMPORT = %r{(?:\.\./)+(?:components/(?:field|filters)|lib/ui)}.source
       ENTRY = "app/javascript/madmin.jsx"
-      PAGES = File.expand_path("../../../app/javascript/pages", __dir__)
+      SOURCE = File.expand_path("../../../app/javascript", __dir__)
 
       # @return [void]
       def self.included(generator)
-        generator.source_root(PAGES)
+        generator.source_root(SOURCE)
       end
 
       private
 
-      # @param name [String] component path without extension, e.g. "views/post/index"
+      # @param name [String] component path without extension, e.g. "pages/resource/post/index"
       # @param component [String] import name, e.g. "PostIndex"
       # @param root [Boolean] true for layout/dashboard, false for entries inside `views: {}`
       # @param line [String] the registration line
@@ -28,9 +30,9 @@ module MadminInertia
         invoke "madmin_inertia:bundle" unless File.exist?(File.join(destination_root, ENTRY))
         copy_file "#{generic(name)}.jsx", "app/javascript/madmin/#{name}.jsx" do |content|
           content
-            .gsub(%r{import (\w+), \{ (.*?) \} from "\.\.?/(?:field|filters|ui)"}, 'import { \1, \2 } from "madmin-inertia"')
-            .gsub(%r{import (\w+) from "\.\.?/(?:field|filters)"}, 'import { \1 } from "madmin-inertia"')
-            .gsub(%r{from "\.\.?/(?:field|filters|ui)"}, 'from "madmin-inertia"')
+            .gsub(%r{import (\w+), \{ (.*?) \} from "#{GEM_IMPORT}"}, 'import { \1, \2 } from "madmin-inertia"')
+            .gsub(%r{import (\w+) from "#{GEM_IMPORT}"}, 'import { \1 } from "madmin-inertia"')
+            .gsub(%r{from "#{GEM_IMPORT}"}, 'from "madmin-inertia"')
         end
         register ENTRY, "import #{component} from \"./madmin/#{name}\"\n", {after: /^import \{ start \}.*\n/}, line,
           root ? "start({\n" : "  views: {\n"
@@ -45,9 +47,9 @@ module MadminInertia
         inject_into_file file, line, after: marker
       end
 
-      # "views/post/index" => "views/index": the gem ships one source per view, not per model.
+      # "pages/resource/post/index" => "pages/resource/index": the gem ships one source per view, not per model.
       def generic(name)
-        name.sub(%r{\Aviews/[^/]+/}, "views/")
+        name.sub(%r{\A(pages/resource)/[^/]+/}, '\1/')
       end
 
       # @return [String] the resource's param key ("Admin::User" => "admin_user"), or nil
@@ -64,18 +66,18 @@ module MadminInertia
       # @return [void]
       def eject_view(view)
         key = resource_key
-        eject key ? "views/#{key}/#{view}" : "views/#{view}", component_name(view), root: false,
+        eject key ? "pages/resource/#{key}/#{view}" : "pages/resource/#{view}", component_name(view), root: false,
           line: key ? "    \"#{key}/#{view}\": #{component_name(view)},\n" : "    #{view}: #{component_name(view)},\n"
       end
 
       # @return [void]
       def eject_layout
-        eject "layout", "Layout", root: true, line: "  layout: Layout,\n"
+        eject "layouts/admin-layout", "Layout", root: true, line: "  layout: Layout,\n"
       end
 
       # @return [void]
       def eject_dashboard
-        eject "dashboard", "Dashboard", root: true, line: "  dashboard: Dashboard,\n"
+        eject "pages/dashboard/index", "Dashboard", root: true, line: "  dashboard: Dashboard,\n"
       end
     end
   end

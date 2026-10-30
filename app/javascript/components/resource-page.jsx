@@ -1,10 +1,10 @@
 import React from "react"
 import { Head, Link, router } from "@inertiajs/react"
-import { registry } from "./registry"
-import { buttonClass } from "./ui"
-import Form from "./views/form"
-import Index from "./views/index"
-import Show from "./views/show"
+import { registry } from "../lib/registry"
+import { buttonClass } from "../lib/ui"
+import Form from "../pages/resource/form"
+import Index from "../pages/resource/index"
+import Show from "../pages/resource/show"
 
 const defaults = { index: Index, show: Show, form: Form }
 

@@ -1,7 +1,7 @@
 import React from "react"
 import { Link, useForm } from "@inertiajs/react"
-import Field from "../field"
-import { buttonClass } from "../ui"
+import Field from "../../components/field"
+import { buttonClass } from "../../lib/ui"
 
 // New/edit form; submits as JSON (or multipart for edits) and shows server-side errors.
 export default function Form({ fields, record, resource, mode, urls, uploads, errors }) {

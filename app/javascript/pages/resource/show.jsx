@@ -1,5 +1,5 @@
 import React from "react"
-import { Value } from "../field"
+import { Value } from "../../components/field"
 
 // Read-only attribute list for one record.
 export default function Show({ fields, record }) {

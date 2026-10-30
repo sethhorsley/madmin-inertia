@@ -1,17 +1,14 @@
 import React from "react"
 import { createRoot } from "react-dom/client"
 import { createInertiaApp } from "@inertiajs/react"
-import DefaultDashboard from "./app/javascript/pages/dashboard"
-import DefaultLayout from "./app/javascript/pages/layout"
-import Resource from "./app/javascript/pages/resource"
-import { registry } from "./app/javascript/pages/registry"
+import DefaultDashboard from "./app/javascript/pages/dashboard/index"
+import DefaultLayout from "./app/javascript/layouts/admin-layout"
+import Resource from "./app/javascript/components/resource-page"
+import { registry } from "./app/javascript/lib/registry"
 
-export { default as Field, Value } from "./app/javascript/pages/field"
-export { default as Filters, indexUrl } from "./app/javascript/pages/filters"
-export { buttonClass, inputClass } from "./app/javascript/pages/ui"
-
-// Page map for apps that run their own createInertiaApp instead of start().
-export const pages = (extra = {}) => ({ "Madmin/Resource": Resource, ...extra })
+export { default as Field, Value } from "./app/javascript/components/field"
+export { default as Filters, indexUrl } from "./app/javascript/components/filters"
+export { buttonClass, inputClass } from "./app/javascript/lib/ui"
 
 // Boots the admin. Pass components ejected with `rails g madmin_inertia:views`:
 // start({ layout, dashboard, views: { index, "post/show": PostShow } })

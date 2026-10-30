@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react"
 import { Link } from "@inertiajs/react"
-import { buttonClass, inputClass } from "./ui"
+import { buttonClass, inputClass } from "../lib/ui"
 
 export function Value({ value }) {
   if (value === null || value === undefined || value === "") return <span className="text-neutral-500">—</span>

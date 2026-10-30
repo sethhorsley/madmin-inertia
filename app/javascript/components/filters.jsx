@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { router } from "@inertiajs/react"
-import { buttonClass, inputClass } from "./ui"
+import { buttonClass, inputClass } from "../lib/ui"
 
 const INPUT_TYPES = { number: "number", date: "date", datetime: "datetime-local" }
 

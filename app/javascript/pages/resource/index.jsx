@@ -1,8 +1,8 @@
 import React from "react"
 import { Link, router } from "@inertiajs/react"
-import { Value } from "../field"
-import Filters, { indexUrl } from "../filters"
-import { buttonClass, inputClass } from "../ui"
+import { Value } from "../../components/field"
+import Filters, { indexUrl } from "../../components/filters"
+import { buttonClass, inputClass } from "../../lib/ui"
 
 // Search, scopes, filters, sortable table and pagination for a resource.
 export default function Index({ resource, fields, records, urls, filters, scopes, pagination, filter_columns, filter_operators, active_filters }) {
