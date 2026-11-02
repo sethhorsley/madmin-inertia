@@ -13,6 +13,7 @@ export { default as Filters, indexUrl } from "./app/javascript/components/filter
 export { buttonClass, inputClass } from "./app/javascript/lib/ui"
 export { default as AdminSidebar } from "./app/javascript/components/admin-sidebar"
 export { default as Breadcrumbs } from "./app/javascript/components/breadcrumbs"
+export { default as CommandPalette } from "./app/javascript/components/command-palette"
 export { default as ThemeToggle } from "./app/javascript/components/theme-toggle"
 export * from "./app/javascript/components/ui/separator"
 export * from "./app/javascript/components/ui/sidebar"

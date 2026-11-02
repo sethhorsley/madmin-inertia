@@ -2,6 +2,7 @@ import React from "react"
 import { usePage } from "@inertiajs/react"
 import AdminSidebar from "@/components/admin-sidebar"
 import Breadcrumbs from "@/components/breadcrumbs"
+import CommandPalette from "@/components/command-palette"
 import ThemeToggle from "@/components/theme-toggle"
 import { Separator } from "@/components/ui/separator"
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
@@ -19,7 +20,7 @@ export default function Layout({ children }) {
           <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
           <Breadcrumbs admin={admin} path={path} />
         </div>
-        <div className="px-4"><ThemeToggle /></div>
+        <div className="flex items-center gap-2 px-4"><CommandPalette admin={admin} /><ThemeToggle /></div>
       </header>
       <main className="space-y-6 p-4 sm:p-6 lg:p-8">
         {Object.entries(flash || {}).map(([kind, message]) => <p key={kind} role={kind === "alert" ? "alert" : "status"} className="rounded-lg border p-3">{message}</p>)}

@@ -17,6 +17,7 @@
     "@inertiajs/react": "*",
     "class-variance-authority": "*",
     "clsx": "*",
+    "cmdk": "*",
     "lucide-react": "*",
     "radix-ui": "*",
     "react": "*",

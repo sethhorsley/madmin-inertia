@@ -55,6 +55,22 @@ The first eject runs `rails g madmin_inertia:bundle`. It creates a six-line `app
 
 Ejecting needs a `package.json` (jsbundling-rails with esbuild). Importmap apps run the admin from the prebuilt bundle but can't customize its views, because there is no compiler for JSX; the generators stop with an error telling you to add jsbundling-rails.
 
+## Command palette
+
+Press Cmd/Ctrl+K (or click Search in the header) to jump to a page or find a record in any resource. It follows Madmin's own resource settings, so there is nothing new to configure:
+
+```ruby
+class PostResource < Madmin::Resource
+  menu false                                # hidden from the sidebar => hidden from the palette
+  attribute :title                          # string and text columns are searched by default
+  attribute :internal_notes, searchable: false
+  def self.display_name(record) = record.title   # the hit's title (default: "Post #1")
+  def self.command_palette? = false              # leave this resource out of the palette only
+end
+```
+
+Up to 5 hits per resource, grouped by resource, from `GET /madmin/search?q=` (two characters or more). It uses the same `LIKE` search as each index page, which scans unindexed columns, so opt huge tables (events, versions, logs) out with `command_palette? = false`. On Postgres each table also gets 500 ms; one that takes longer, or errors, is skipped for that search.
+
 ## Host contract
 
 - Optionally define a private `admin_user_props` in `Madmin::ApplicationController` returning `{user: {name:, email:}, logout: path}` to show the signed-in user in the default layout.
