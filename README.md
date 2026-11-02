@@ -57,19 +57,19 @@ Ejecting needs a `package.json` (jsbundling-rails with esbuild). Importmap apps 
 
 ## Command palette
 
-Press Cmd/Ctrl+K (or click Search in the header) to jump to a page or find a record in any resource. It follows Madmin's own resource settings, so there is nothing new to configure:
+Press Cmd/Ctrl+K (or click Search in the header) to jump to a page or find a record in any resource. It follows Madmin's own resource settings, plus one option, `search: true`:
 
 ```ruby
 class PostResource < Madmin::Resource
   menu false                                # hidden from the sidebar => hidden from the palette
-  attribute :title                          # string and text columns are searched by default
-  attribute :internal_notes, searchable: false
+  attribute :title, search: true            # the palette searches columns marked search: true
+  attribute :published_at, index: true, search: true   # any column works; it is cast to text
   def self.display_name(record) = record.title   # the hit's title (default: "Post #1")
   def self.command_palette? = false              # leave this resource out of the palette only
 end
 ```
 
-Up to 5 hits per resource, grouped by resource, from `GET /madmin/search?q=` (two characters or more). It uses the same `LIKE` search as each index page, which scans unindexed columns, so opt huge tables (events, versions, logs) out with `command_palette? = false`. On Postgres each table also gets 500 ms; one that takes longer, or errors, is skipped for that search.
+The palette searches only columns marked `search: true`; a resource with none is not searched. (`searchable:` still controls the index page's own search box and is separate.) Up to 5 hits per resource, grouped by resource, from `GET /madmin/search?q=` (two characters or more). It uses the same `LIKE` search as each index page, which scans unindexed columns, so opt huge tables (events, versions, logs) out with `command_palette? = false`. On Postgres each table also gets 500 ms; one that takes longer, or errors, is skipped for that search.
 
 ## Host contract
 

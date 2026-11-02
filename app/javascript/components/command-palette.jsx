@@ -13,11 +13,10 @@ const SIZING = "**:data-[slot=command-input-wrapper]:h-12 [&_[cmdk-group-heading
 const RESET = "border-0 px-0 shadow-none ring-0 focus:border-0 focus:ring-0"
 
 // Admin pages the palette can jump to without a request.
-const pages = (admin) => [
-  { label: "Dashboard", url: admin.dashboard },
-  ...admin.navigation.flatMap((item) => item.url ? [item] : item.children),
-  { label: "Settings", url: admin.settings },
-]
+const pages = (admin) => {
+  const all = [{ label: "Dashboard", url: admin.dashboard }, ...admin.navigation.flatMap((item) => item.url ? [item] : item.children), { label: "Settings", url: admin.settings }]
+  return all.filter((page, index) => all.findIndex((other) => other.url === page.url) === index)
+}
 
 // Cmd/Ctrl+K opens it. With nothing typed it lists every page (the tables); typing filters pages in the browser; records come from the server (admin.search), which applies each
 // resource's own Madmin rules: `menu false`, `searchable:` on attributes and `display_name(record)`.
@@ -71,7 +70,7 @@ export default function CommandPalette({ admin }) {
               {matchingPages.map((page) => <CommandItem key={page.url} value={`page ${page.url}`} onSelect={() => go(page.url)}>{page.label}</CommandItem>)}
             </CommandGroup>}
             {Object.entries(groups).map(([group, items]) => <CommandGroup key={group} heading={group}>
-              {items.map((item) => <CommandItem key={item.url} value={item.url} onSelect={() => go(item.url)}>{item.label}</CommandItem>)}
+              {items.map((item) => <CommandItem key={item.url} value={`${group} ${item.url}`} onSelect={() => go(item.url)}>{item.label}</CommandItem>)}
             </CommandGroup>)}
           </CommandList>
         </Command>

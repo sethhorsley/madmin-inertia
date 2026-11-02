@@ -2048,11 +2048,10 @@ import { Fragment as Fragment5, jsx as jsx19, jsxs as jsxs12 } from "react/jsx-r
 var MIN_LENGTH = 2;
 var SIZING = "**:data-[slot=command-input-wrapper]:h-12 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]]:px-2 [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5";
 var RESET = "border-0 px-0 shadow-none ring-0 focus:border-0 focus:ring-0";
-var pages = (admin) => [
-  { label: "Dashboard", url: admin.dashboard },
-  ...admin.navigation.flatMap((item) => item.url ? [item] : item.children),
-  { label: "Settings", url: admin.settings }
-];
+var pages = (admin) => {
+  const all = [{ label: "Dashboard", url: admin.dashboard }, ...admin.navigation.flatMap((item) => item.url ? [item] : item.children), { label: "Settings", url: admin.settings }];
+  return all.filter((page, index) => all.findIndex((other) => other.url === page.url) === index);
+};
 function CommandPalette({ admin }) {
   const [open, setOpen] = useState5(false);
   const [query, setQuery] = useState5("");
@@ -2120,7 +2119,7 @@ function CommandPalette({ admin }) {
         /* @__PURE__ */ jsxs12(CommandList, { children: [
           /* @__PURE__ */ jsx19(CommandEmpty, { children: searching ? "Searching\u2026" : ready ? "No results." : `No matching pages. Type ${MIN_LENGTH}+ characters to search records.` }),
           matchingPages.length > 0 && /* @__PURE__ */ jsx19(CommandGroup, { heading: "Pages", children: matchingPages.map((page) => /* @__PURE__ */ jsx19(CommandItem, { value: `page ${page.url}`, onSelect: () => go(page.url), children: page.label }, page.url)) }),
-          Object.entries(groups).map(([group, items]) => /* @__PURE__ */ jsx19(CommandGroup, { heading: group, children: items.map((item) => /* @__PURE__ */ jsx19(CommandItem, { value: item.url, onSelect: () => go(item.url), children: item.label }, item.url)) }, group))
+          Object.entries(groups).map(([group, items]) => /* @__PURE__ */ jsx19(CommandGroup, { heading: group, children: items.map((item) => /* @__PURE__ */ jsx19(CommandItem, { value: `${group} ${item.url}`, onSelect: () => go(item.url), children: item.label }, item.url)) }, group))
         ] })
       ] }) })
     ] })
