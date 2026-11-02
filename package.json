@@ -1,8 +1,18 @@
 {
   "name": "madmin-inertia",
   "version": "0.1.0",
-  "private": true,
+  "description": "React components and entry point for the madmin_inertia gem (Madmin resources rendered with Inertia + shadcn/ui)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sethhorsley/madmin-inertia.git"
+  },
   "main": "index.jsx",
+  "files": [
+    "index.jsx",
+    "tsconfig.json",
+    "app/javascript"
+  ],
   "peerDependencies": {
     "@inertiajs/react": "*",
     "class-variance-authority": "*",
