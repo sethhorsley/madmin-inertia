@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.homepage = "https://github.com/sethhorsley/madmin-inertia"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.2"
-  spec.files = Dir["{app,config,lib}/**/*", "index.jsx", "package.json", "tsconfig.json", "README.md", "LICENSE"]
+  spec.files = Dir["{app,config,lib}/**/*", "index.jsx", "dist/index.js", "package.json", "tsconfig.json", "README.md", "LICENSE"]
 
   spec.metadata = {"source_code_uri" => spec.homepage, "rubygems_mfa_required" => "true"}
 

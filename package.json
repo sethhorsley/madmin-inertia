@@ -1,15 +1,15 @@
 {
   "name": "madmin-inertia",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "React components and entry point for the madmin_inertia gem (Madmin resources rendered with Inertia + shadcn/ui)",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sethhorsley/madmin-inertia.git"
   },
-  "main": "index.jsx",
+  "main": "dist/index.js",
   "files": [
-    "index.jsx",
+    "dist",
     "tsconfig.json",
     "app/javascript"
   ],
@@ -20,6 +20,7 @@
     "lucide-react": "*",
     "radix-ui": "*",
     "react": "*",
+    "react-dom": "*",
     "recharts": "*",
     "tailwind-merge": "*"
   }
