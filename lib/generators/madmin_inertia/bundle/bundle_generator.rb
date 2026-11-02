@@ -31,7 +31,7 @@ module MadminInertia
       # @return [void]
       def link_npm_package
         relative = Pathname.new(gem_root).relative_path_from(Pathname.new(destination_root))
-        run package_manager.add_command("@inertiajs/react react react-dom radix-ui lucide-react class-variance-authority clsx tailwind-merge madmin-inertia@#{package_manager.link_spec(relative)}")
+        run package_manager.add_command("@inertiajs/react react react-dom radix-ui recharts lucide-react class-variance-authority clsx tailwind-merge madmin-inertia@#{package_manager.link_spec(relative)}")
       end
 
       # esbuild must resolve react from the app when bundling the linked package.

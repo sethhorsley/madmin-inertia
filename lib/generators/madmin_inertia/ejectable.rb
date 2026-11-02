@@ -7,8 +7,8 @@ module MadminInertia
     # Needs a package.json (jsbundling-rails with esbuild): the JSX source is copied into the app and
     # registered with `start()` in app/javascript/madmin.jsx. Importmap apps have no compiler for JSX.
     module Ejectable
-      # Relative imports of the gem's shared pieces, which ejected files take from the package instead.
-      GEM_IMPORT = %r{(?:\.\./)+(?:components/[\w/-]+|lib/ui)}.source
+      # `#` subpath imports of the gem's shared pieces, which ejected files take from the package instead.
+      GEM_IMPORT = %r{(?:#(?:ui|components)/[\w-]+|#lib/ui)}.source
       ENTRY = "app/javascript/madmin.jsx"
       SOURCE = File.expand_path("../../../app/javascript", __dir__)
 

@@ -1,16 +1,16 @@
 import React, { useState } from "react"
 import { Link } from "@inertiajs/react"
 import { ChevronRight, ChevronsUpDown, Folder, LayoutDashboard, LogOut, Settings, ShieldCheck, User } from "lucide-react"
-import { isActive } from "../lib/navigation"
-import { useSidebarVariant } from "../lib/sidebar-variant"
-import { Avatar, AvatarFallback } from "./ui/avatar"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./ui/collapsible"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu"
-import { Input } from "./ui/input"
+import { isActive } from "#lib/navigation"
+import { useSidebarVariant } from "#lib/sidebar-variant"
+import { Avatar, AvatarFallback } from "#ui/avatar"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "#ui/collapsible"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "#ui/dropdown-menu"
+import { Input } from "#ui/input"
 import {
   Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton,
   SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarRail, useSidebar,
-} from "./ui/sidebar"
+} from "#ui/sidebar"
 
 // "Account / Notifier / Alerts" => group "Account", sublink "Notifier - Alerts"; labels without " / " stay flat.
 function namespaced(children) {

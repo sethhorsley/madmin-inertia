@@ -1,7 +1,7 @@
 import React from "react"
 import { Link } from "@inertiajs/react"
-import { trail } from "../lib/navigation"
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "./ui/breadcrumb"
+import { trail } from "#lib/navigation"
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "#ui/breadcrumb"
 
 // Admin name > section > page, like the sidebar's grouping. "Account / Notifier" reads "Account - Notifier".
 export default function Breadcrumbs({ admin, path }) {

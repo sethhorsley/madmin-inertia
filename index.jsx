@@ -16,6 +16,8 @@ export { default as Breadcrumbs } from "./app/javascript/components/breadcrumbs"
 export { default as ThemeToggle } from "./app/javascript/components/theme-toggle"
 export * from "./app/javascript/components/ui/separator"
 export * from "./app/javascript/components/ui/sidebar"
+export * from "./app/javascript/components/ui/card"
+export * from "./app/javascript/components/ui/chart"
 
 // Boots the admin. Pass components ejected with `rails g madmin_inertia:views`:
 // start({ layout, dashboard, views: { index, "post/show": PostShow } })

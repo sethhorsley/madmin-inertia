@@ -1,8 +1,8 @@
 import React from "react"
 import { Monitor, Moon, Sun } from "lucide-react"
-import { setTheme, useTheme } from "../lib/theme"
-import { Button } from "./ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "./ui/dropdown-menu"
+import { setTheme, useTheme } from "#lib/theme"
+import { Button } from "#ui/button"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "#ui/dropdown-menu"
 
 const THEMES = { light: Sun, dark: Moon, system: Monitor }
 
