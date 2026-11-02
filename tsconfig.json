@@ -1,1 +1,1 @@
-{ "compilerOptions": { "baseUrl": ".", "paths": { "@/*": ["app/javascript/*"] } } }
+{ "compilerOptions": { "baseUrl": ".", "paths": { "@/*": ["app/javascript/*"], "cn": ["app/javascript/lib/utils"] } } }
