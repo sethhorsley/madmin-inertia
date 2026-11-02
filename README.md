@@ -74,6 +74,6 @@ The prebuilt bundle in `app/assets/builds` comes from `build/`. After changing a
 cd build && pnpm install && pnpm build
 ```
 
-The UI is [shadcn/ui](https://ui.shadcn.com) (`build/components.json`, JSX, in `app/javascript/components/ui`). Add components from `build/` with `pnpm dlx shadcn@latest add <name>`, then change the generated `@/` and `cn` imports to relative paths: apps that eject views bundle this source themselves and have no `@` alias.
+The UI is [shadcn/ui](https://ui.shadcn.com) (`build/components.json`, JSX, in `app/javascript/components/ui`). Add components from `build/` with `pnpm dlx shadcn@latest add <name>`; the generated `@/` imports work as is. The root `tsconfig.json` maps `@/*` to `app/javascript`, which esbuild reads per file, so it holds even when an app bundles this source (the app's own `@/` is unaffected). Vite ignores `paths`: add `vite-tsconfig-paths`, or alias `@` to the gem's `app/javascript` for files inside the gem. If a generated file imports `cn` from `"cn"`, change it to `@/lib/utils`.
 
 Commit the rebuilt `madmin_inertia.js` and `madmin_inertia.css`. `build/` has its own `node_modules` on purpose: apps link the gem root, and a second copy of React there would break hooks.

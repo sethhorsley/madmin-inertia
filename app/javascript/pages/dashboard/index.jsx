@@ -1,8 +1,8 @@
 import React, { useMemo, useState } from "react"
 import { Head, Link } from "@inertiajs/react"
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "#ui/card"
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "#ui/chart"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 
 const config = {
   views: { label: "Records" },

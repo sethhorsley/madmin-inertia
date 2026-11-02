@@ -1,9 +1,9 @@
 import React from "react"
 import { Head } from "@inertiajs/react"
 import { Monitor, Moon, Sun } from "lucide-react"
-import { Button } from "#ui/button"
-import { useSidebarVariant, setSidebarVariant } from "#lib/sidebar-variant"
-import { setTheme, useTheme } from "#lib/theme"
+import { Button } from "@/components/ui/button"
+import { useSidebarVariant, setSidebarVariant } from "@/lib/sidebar-variant"
+import { setTheme, useTheme } from "@/lib/theme"
 
 const THEMES = { light: Sun, dark: Moon, system: Monitor }
 

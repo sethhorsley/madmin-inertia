@@ -1,10 +1,10 @@
 import React from "react"
 import { usePage } from "@inertiajs/react"
-import AdminSidebar from "#components/admin-sidebar"
-import Breadcrumbs from "#components/breadcrumbs"
-import ThemeToggle from "#components/theme-toggle"
-import { Separator } from "#ui/separator"
-import { SidebarInset, SidebarProvider, SidebarTrigger } from "#ui/sidebar"
+import AdminSidebar from "@/components/admin-sidebar"
+import Breadcrumbs from "@/components/breadcrumbs"
+import ThemeToggle from "@/components/theme-toggle"
+import { Separator } from "@/components/ui/separator"
+import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 
 export default function Layout({ children }) {
   const { admin, flash } = usePage().props

@@ -12,11 +12,5 @@
     "react": "*",
     "recharts": "*",
     "tailwind-merge": "*"
-  },
-  "imports": {
-    "#ui/*": "./app/javascript/components/ui/*.jsx",
-    "#components/*": "./app/javascript/components/*.jsx",
-    "#lib/*": "./app/javascript/lib/*.js",
-    "#hooks/*": "./app/javascript/hooks/*.js"
   }
 }
