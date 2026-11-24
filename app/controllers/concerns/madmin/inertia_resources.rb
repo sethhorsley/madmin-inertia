@@ -51,6 +51,33 @@ module Madmin::InertiaResources
     end)
   end
 
+  # Limits the index to one record's has_many list, like Avo's nested association index:
+  # ?via_resource=account&via_id=acct_1&via_association=regions_user_courses. Loading the
+  # association itself covers through, scoped and polymorphic lists that a column filter can't.
+  # @return [ActiveRecord::Relation]
+  def scoped_resources
+    relation = super
+    return relation unless via
+
+    key = resource.model.primary_key
+    relation.where(key => via[:records].unscope(:order).select(key))
+  end
+
+  # The parent record and association named by the via params, when the parent resource
+  # declares that has_many attribute for this resource's model. A missing parent is a 404.
+  # @return [Hash, nil]
+  def via
+    return @via if defined?(@via)
+
+    parent_resource = Madmin.resources.find { |candidate| candidate.param_key == params[:via_resource] } if params[:via_resource].present?
+    attribute = parent_resource&.get_attribute(params[:via_association].to_s.to_sym)
+    reflection = parent_resource.model.reflect_on_association(attribute.name) if attribute && %w[has_many nested_has_many].include?(attribute.field.class.field_type)
+    return @via = nil unless reflection && reflection.klass.base_class == resource.model.base_class
+
+    record = parent_resource.model_find(params[:via_id])
+    @via = {resource: parent_resource, record: record, attribute: attribute, records: record.public_send(attribute.name)}
+  end
+
   # Runs after inherited new/edit/show actions, including subclass customizations.
   # @return [void]
   def default_render(*)
@@ -122,7 +149,8 @@ module Madmin::InertiaResources
     if page == "index"
       props.merge!(
         records: @records.map { |record| record_props(record, fields) },
-        filters: {q: search_term, sort: sort_column, direction: sort_direction, scope: valid_scope},
+        filters: {q: search_term, sort: sort_column, direction: sort_direction, scope: valid_scope}.merge(via ? params.permit(:via_resource, :via_id, :via_association).to_h.symbolize_keys : {}),
+        via: via && {label: "#{via[:attribute].field.label} of #{via[:resource].display_name(via[:record])}", url: via[:resource].show_path(via[:record])},
         filter_columns: resource.filterable_attributes.map { |attribute| {name: attribute.name, label: attribute.field.label, type: attribute.field.filter_type} },
         filter_operators: Madmin::Filter::OPERATORS.to_h { |type, operators| [type, operators.map { |operator| {value: operator, label: helpers.t("madmin.filters.operators.#{type}.#{operator}"), valueless: Madmin::Filter::WITHOUT_VALUE.include?(operator)} }] },
         active_filters: filters.map(&:to_h),
