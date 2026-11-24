@@ -5,7 +5,7 @@ import Filters, { indexUrl } from "@/components/filters"
 import { buttonClass, inputClass } from "@/lib/ui"
 
 // Search, scopes, filters, sortable table and pagination for a resource.
-export default function Index({ resource, fields, records, urls, filters, scopes, pagination, filter_columns, filter_operators, active_filters }) {
+export default function Index({ resource, fields, records, urls, filters, scopes, pagination, filter_columns, filter_operators, active_filters, via }) {
   function search(event) {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
@@ -18,6 +18,9 @@ export default function Index({ resource, fields, records, urls, filters, scopes
       <button type="submit" className={buttonClass}>Search</button>
       {filters.q && <Link href={urls.index} className={buttonClass}>Clear</Link>}
     </form>
+    {via && <p className="flex flex-wrap items-center gap-2 text-sm">
+      <span className="inline-flex items-center gap-2 rounded-full border border-neutral-300 px-3 py-1 dark:border-neutral-700"><Link href={via.url} className="underline underline-offset-4">{via.label}</Link><Link href={indexUrl(urls.index, { ...filters, via_resource: null, via_id: null, via_association: null, page: null }, active_filters)} aria-label={`Show all ${resource.label}`}>×</Link></span>
+    </p>}
     <Filters urls={urls} params={filters} columns={filter_columns} operators={filter_operators} active={active_filters} />
     <div className="overflow-x-auto rounded-xl border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
       <table className="w-full text-sm"><caption className="sr-only">{resource.label}</caption><thead className="border-b border-neutral-200 bg-neutral-100 dark:border-neutral-800 dark:bg-neutral-950"><tr>

@@ -2487,7 +2487,7 @@ function Filters({ urls, params, columns, operators, active }) {
 
 // ../app/javascript/pages/resource/index.jsx
 import { Fragment as Fragment8, jsx as jsx26, jsxs as jsxs19 } from "react/jsx-runtime";
-function Index({ resource, fields, records, urls, filters, scopes, pagination, filter_columns, filter_operators, active_filters }) {
+function Index({ resource, fields, records, urls, filters, scopes, pagination, filter_columns, filter_operators, active_filters, via }) {
   function search(event) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -2509,6 +2509,10 @@ function Index({ resource, fields, records, urls, filters, scopes, pagination, f
       /* @__PURE__ */ jsx26("button", { type: "submit", className: buttonClass, children: "Search" }),
       filters.q && /* @__PURE__ */ jsx26(Link6, { href: urls.index, className: buttonClass, children: "Clear" })
     ] }),
+    via && /* @__PURE__ */ jsx26("p", { className: "flex flex-wrap items-center gap-2 text-sm", children: /* @__PURE__ */ jsxs19("span", { className: "inline-flex items-center gap-2 rounded-full border border-neutral-300 px-3 py-1 dark:border-neutral-700", children: [
+      /* @__PURE__ */ jsx26(Link6, { href: via.url, className: "underline underline-offset-4", children: via.label }),
+      /* @__PURE__ */ jsx26(Link6, { href: indexUrl(urls.index, { ...filters, via_resource: null, via_id: null, via_association: null, page: null }, active_filters), "aria-label": `Show all ${resource.label}`, children: "\xD7" })
+    ] }) }),
     /* @__PURE__ */ jsx26(Filters, { urls, params: filters, columns: filter_columns, operators: filter_operators, active: active_filters }),
     /* @__PURE__ */ jsx26("div", { className: "overflow-x-auto rounded-xl border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900", children: /* @__PURE__ */ jsxs19("table", { className: "w-full text-sm", children: [
       /* @__PURE__ */ jsx26("caption", { className: "sr-only", children: resource.label }),
