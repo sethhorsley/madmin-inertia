@@ -2413,13 +2413,14 @@ var INPUT_TYPES = { number: "number", date: "date", datetime: "datetime-local" }
 function indexUrl(base, params, filters) {
   const query = new URLSearchParams();
   Object.entries(params).forEach(([key, value]) => value && query.append(key, value));
+  const groups = /* @__PURE__ */ new Map();
   filters.forEach(({ column, operator, value }) => {
-    query.append("filters[][column]", column);
-    query.append("filters[][operator]", operator);
-    query.append("filters[][value]", value || "");
+    const key = `filters[${column}][${operator}]`;
+    groups.set(key, [...groups.get(key) || [], value || ""]);
   });
-  const string = query.toString();
-  return string ? `${base}?${string}` : base;
+  const parts = query.toString() ? [query.toString()] : [];
+  groups.forEach((values, key) => values.forEach((value) => parts.push(`${key}${values.length > 1 ? "[]" : ""}=${encodeURIComponent(value)}`)));
+  return parts.length ? `${base}?${parts.join("&")}` : base;
 }
 function Filters({ urls, params, columns, operators, active }) {
   const [open, setOpen] = useState7(false);

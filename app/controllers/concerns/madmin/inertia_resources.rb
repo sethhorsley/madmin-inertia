@@ -34,6 +34,23 @@ module Madmin::InertiaResources
 
   private
 
+  # Reads the compact filters[column][operator]=value shape that `indexUrl` writes
+  # (several values: [operator][]=value), falling back to Madmin's filters[][column] list.
+  # Madmin::Filter still drops unknown columns, operators and uncastable values.
+  # @return [Array<Madmin::Filter>]
+  def filters
+    compact = params[:filters]
+    return super unless compact.is_a?(ActionController::Parameters)
+
+    @filters ||= Madmin::Filter.from_params(resource, compact.to_unsafe_h.flat_map do |column, operators|
+      next [] unless operators.is_a?(Hash)
+
+      operators.flat_map do |operator, values|
+        (Array.wrap(values).presence || [""]).map { |value| {column: column, operator: operator, value: value.to_s} }
+      end
+    end)
+  end
+
   # Runs after inherited new/edit/show actions, including subclass customizations.
   # @return [void]
   def default_render(*)

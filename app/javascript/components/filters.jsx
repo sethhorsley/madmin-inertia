@@ -4,17 +4,19 @@ import { buttonClass, inputClass } from "@/lib/ui"
 
 const INPUT_TYPES = { number: "number", date: "date", datetime: "datetime-local" }
 
-// Builds the index URL; filters use the gem's `filters[][column]` param shape, which Rails groups into an array.
+// Builds the index URL with readable filters: `filters[status][eq]=draft`, or `[eq][]=` when
+// one column and operator carry several values. Columns and operators are plain identifiers.
 export function indexUrl(base, params, filters) {
   const query = new URLSearchParams()
   Object.entries(params).forEach(([key, value]) => value && query.append(key, value))
+  const groups = new Map()
   filters.forEach(({ column, operator, value }) => {
-    query.append("filters[][column]", column)
-    query.append("filters[][operator]", operator)
-    query.append("filters[][value]", value || "")
+    const key = `filters[${column}][${operator}]`
+    groups.set(key, [...(groups.get(key) || []), value || ""])
   })
-  const string = query.toString()
-  return string ? `${base}?${string}` : base
+  const parts = query.toString() ? [query.toString()] : []
+  groups.forEach((values, key) => values.forEach((value) => parts.push(`${key}${values.length > 1 ? "[]" : ""}=${encodeURIComponent(value)}`)))
+  return parts.length ? `${base}?${parts.join("&")}` : base
 }
 
 // shadcn-style filter builder: a popover of column / operator / value rows plus removable badges for the active ones.
