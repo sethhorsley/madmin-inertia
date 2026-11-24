@@ -207,7 +207,7 @@ module Madmin::InertiaResources
       {links: [value].compact.map { |item| association_link(item) }}
     when "has_many", "nested_has_many"
       pagination, items = field.paginated_value(record, params)
-      {links: items.map { |item| association_link(item) }, next_url: association_page_url(field, pagination.next), previous_url: association_page_url(field, pagination.prev)}
+      {links: items.map { |item| association_link(item) }, count: pagination.count, next_url: association_page_url(field, pagination.next), previous_url: association_page_url(field, pagination.prev)}
     when "rich_text"
       {html: helpers.sanitize(value.to_s)}
     when "attachment", "attachments"
